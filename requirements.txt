@@ -1,0 +1,23 @@
+# ============================================================================
+# PYTHON PACKAGE REQUIREMENTS:
+# ============================================================================
+# REQUIRES:
+#       Python >= 3.6.3         --  Core  project interpreter
+#
+# DESCRIPTION:
+#    pip install -r <THIS_FILE>
+#
+# SPECIFIC DEPENDENCIES:
+#       java >=  SE 8           --  Support tabula moudle
+#       MongoDB >= 3.6.5        --  Database
+#       tabula >=  1.0.5        --  Parse PDF table
+# ============================================================================
+
+behave >= 1.2.6
+selenium == 3.12.0
+argparse >= 1.4.0
+pdfminer.six >= 20170720
+tabula-py >= 1.2.0
+pymongo >= 3.6.1
+Jinja2 >= 2.10
+lxml >= 4.2.4
