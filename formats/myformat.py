@@ -71,20 +71,20 @@ class MyLog():
         general.setFormatter(formatter)
         runlog.setFormatter(formatter)
 
-        logger.debug("\n\n"+25 * '*' + '  Started  ' + 25 * '*'+"\n\n")
+        logger.debug(25 * '*' + '  Started  ' + 25 * '*'+"\n\n")
 
 def logged(s=""):
     nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if isinstance(s,str):
-        if re.search("(Assert|Error)[:|：]", s, re.I) != None:
+        if re.match("(Assert|Error)[:|：]", s, re.I) != None:
             level = 50
-        elif re.search("Pass[:|：]", s, re.I) != None:
+        elif re.match("Pass[:|：]", s, re.I) != None:
             level = 40
-        elif re.search("Failed[:|：]", s, re.I) != None:
+        elif re.match("Failed[:|：]", s, re.I) != None:
             level = 30
-        elif re.search("Debug[:|：]", s, re.I) != None:
+        elif re.match("Debug[:|：]", s, re.I) != None:
             level = 20
-        elif re.search("Return|Send|Read|Read|Write|Info(?= ：|:)", s, re.I) != None:
+        elif re.match("Return|Send|Read|Get|Write|Info(?= ：|:)", s, re.I) != None:
             level = 10
         else:level = 0
 
@@ -116,7 +116,7 @@ def logged(s=""):
 
             else:
                 logger.debug(5 * "*" + '   %s   '%line)
-                temp_log_save.append("[%s  DEBUG]  %s"%(nowtime,line))
+                temp_log_save.append("[%s  DEBUG]   %s"%(nowtime,line))
                 temp_log_save_for_mongodb.append("[%s  DEBUG]  %s"%(nowtime,line))
     else:
         logger.debug(5 * "?" + '   格式化输出失败，输出语句应为 String 类型    ')
@@ -160,15 +160,15 @@ def format_log(s=""):
     
     """
     if isinstance(s,str):
-        if re.search("(Assert|Error)[:|：]", s, re.I) != None:
+        if re.match("(Assert|Error)[:|：]", s, re.I) != None:
             level = 50
-        elif re.search("Pass[:|：]", s, re.I) != None:
+        elif re.match("Pass[:|：]", s, re.I) != None:
             level = 40
-        elif re.search("Failed[:|：]", s, re.I) != None:
+        elif re.match("Failed[:|：]", s, re.I) != None:
             level = 30
-        elif re.search("Debug[:|：]", s, re.I) != None:
+        elif re.match("Debug[:|：]", s, re.I) != None:
             level = 20
-        elif re.search("Return|Send|Read|Read|Write|Info(?= ：|:)", s, re.I) != None:
+        elif re.match("Return|Send|Read|Get|Write|Info(?= ：|:)", s, re.I) != None:
             level = 10
         else:level =0
 
@@ -262,10 +262,11 @@ class TestFailedError(Exception):
 def create_html_report(context, name="AutoTest"):
     from jinja2 import Environment, FileSystemLoader
     PATH = os.getcwd() + "\\template"
-    TEMPLATE_ENVIRONMENT = Environment(loader=FileSystemLoader(PATH), keep_trailing_newline=True, autoescape=True)
+    env  = Environment(loader=FileSystemLoader(PATH), keep_trailing_newline=True, autoescape=True)
+    env.filters["openlog"] = open_logs
     fname = os.getcwd() + '\\external\\reports\\AutoTest_Reports_For_%s.html' % name
     with open(fname, 'w', encoding="utf-8") as f:
-        html = TEMPLATE_ENVIRONMENT.get_template("index.html",PATH).render(context)
+        html = env.get_template("index.html",PATH).render(context)
         f.write(html)
     open_report(fname)
 
@@ -273,3 +274,10 @@ def create_html_report(context, name="AutoTest"):
 def open_report(path):
     import webbrowser
     webbrowser.open(path)
+
+@banner_conclusion("打开log日志文件")
+def open_logs(name):
+    path = os.getcwd()+"\\external\\logs\\BehaveTestRun_%s.txt"%name
+    with open(path,encoding="gb2312") as f:
+        content = f.readlines()
+    return content

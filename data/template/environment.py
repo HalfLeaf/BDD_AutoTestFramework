@@ -28,6 +28,7 @@ from tools.mongo import save_read_db
 from xml.etree import ElementTree as ET
 
 featurefile = sys._getframe().f_code.co_filename
+_ID = 0
 
 def timeformat():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -112,6 +113,9 @@ def before_step(context, step):
     
     context._step_temp_dict["Begintime"] = _step_start_time
     context._step_temp_dict["Step"] = step.name
+    global _ID
+    _ID += 1
+    context._step_temp_dict["ID"] = "steps_%s"%_ID 
 
 def after_step(context, step):
     _step_end_time = timeformat()
@@ -194,7 +198,8 @@ def after_feature(context, feature):
         myformat.logged("Debug:异常追踪信息:\n%s\n%s\n%s" % sys.exc_info())
     else:context._analysis["feature_skipped"].append(feature.name)
     
-    context._feature_temp_dict["Filename"] = feature.filename
+    file_name = os.path.basename(feature.filename)
+    context._feature_temp_dict["Filename"] = file_name
     context._feature_temp_dict["Endtime"] = _feature_end_time
     context._feature_temp_dict["Uptime"]="%.3f"%float(feature.duration)
     context._feature_temp_dict["Status"] ="%s"%feature.status
@@ -238,7 +243,7 @@ def after_all(context):
     context._analysis["FeaturesSkippedNum"] = len(context._analysis["feature_skipped"])
     context._analysis["SkippedFeatures"] = context._analysis["feature_skipped"]
     rate =  context._analysis["FeaturesPassNum"]/context._feature_exe_total
-    context._analysis["PassedRate"] = rate
+    context._analysis["PassedRate"] = '%.2f%%'%(rate * 100)
     
     name = context._analysis['CaseName']
     with save_read_db.DB_Operation() as db:

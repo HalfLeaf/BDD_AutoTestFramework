@@ -1,164 +1,228 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Reports-基于behave设计自动化测试框架-测试报告</title>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     <title>Reports-基于behave设计自动化测试框架-测试报告</title>
+     <style type="text/css">
+        #line
+        {
+            margin: 10px;
+            height: 80px;
+            width:100%;
+            padding-left:320px;
+        }
+        #colu
+        {
+            width:320px;
+        }
+        div.show_area
+        {
+            width:81%;
+            min-height:100%;
+            top: 180px;
+            left: 340px;
+            position: absolute;
+            padding-left: 10px;
+            padding-top: 20px;
+            border:4px solid yellow;
+            text-align:left;
+            background-image:url("../../template/bg4.png");
+            background-repeat:no-repeat;
+            background-size:100% 100%;
+            background-attachment: fixed;
+        }
+         button{width:300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+         h1 {text-align:left;}
+    </style>
 </head>
-<body >
 
-<h2 style="text-align:center"><b><strong>Reports - 自动化测试报告 - {{ AutoTest }}</strong> </b></h2><br>
+<body background="../../template/bg9.png" style=" background-repeat:no-repeat ;background-size:100% 100%; background-attachment: fixed;" >
 
-    <table  border="1" cellpadding="5" cellspacing="0" style="margin-left:0.8em;">
-        <caption style="text-align:left;color:blueviolet"> Analysis:<br> </caption>
-         <tbody>
-            <tr>
-                <td style="text-align:center"> CasesTotal </td>
-                <td style="text-align:center"> AutoCasesTotal </td>
-                <td style="text-align:center"> CasesExecuteTotal </td>
-                <td style="text-align:center"> Uptime </td>
-                <td style="text-align:center"> Begintime </td>
-                <td style="text-align:center"> Endtime </td>
-            </tr>
-            <tr>
-                <td style="text-align:center"> {{ CasesTotal|default("NA") }} </td>
-                <td style="text-align:center"> {{ AutoCasesTotal|default("NA") }}</td>
-                <td style="text-align:center"> {{ CasesExecuteTotal|default("NA") }}</td>
-                <td> {{ Uptime|default("NA") }}</td>
-                <td> {{ Begintime|default("NA") }}</td>
-                <td> {{ Endtime|default("NA") }}</td>
-            </tr>
-    </table>
-<br>
-    <table  border="1" cellpadding="5" cellspacing="0" style="margin-left:0.8em;">
-        <tbody>
-            <tr>
-                <td> PassedRate </td>
-                <td> FeaturesPassNum </td>
-                <td> FeaturesFailedNum </td>
-                <td> FeaturesSkippedNum </td>
-            </tr>
-            <tr>
-                <td style="text-align:center;color:blue"> {{ PassedRate|default("NA") }}</td>
-                <td style="text-align:center;color:green"> {{ FeaturesPassNum|default("NA") }} </td>
-                <td style="text-align:center;color:red"> {{ FeaturesFailedNum|default("NA") }}</td>
-                <td style="text-align:center;color:#a9a9a9"> {{ FeaturesSkippedNum|default("NA") }}</td>
-            </tr>
-       </tbody>
-    </table >
-<br><br><br>
-    {% for f in features %}
-        <hr class="hrLine" style="width:100%;border:none;border-top:1px solid skyblue "/>
-        {% if f.Status == "Status.failed" %}
-        <h3 style="text-align:left;color:red"><strong>Feature:{{ f.Feature|default("NA") }}  &emsp;&emsp; {{ f.Status|default("NA") }} &emsp;&emsp;{{ f.Filename|default("NA") }}</strong></h3>
+<script type="text/javascript">
+function displayid(id){
+var erv = document.getElementById(""+id+"");
+if(erv.style.display=="none"){
+erv.style.display="block";
+}
+else{
+erv.style.display="none";
+}
+}
+</script>
+
+<script type="text/javascript">
+    function contentshow(num,max)
+    {
+        for(var i=1; i<=max; i++)
+        {
+            document.getElementById(i).style.display="none";
+        }
+        document.getElementById(num).style.display="";
+    }
+</script>
+
+{% macro show_list(pro,rate="NA",pass="NA",fail="NA",skip="NA") -%}
+    <tr>
+        {% if pro == "Features" %}
+        <td style="text-align:center;"> PassedRate </td>
         {% else %}
-        <h3 style="text-align:left;color:green"><strong>Feature:{{ f.Feature|default("NA") }} &emsp;&emsp;{{ f.Status|default("NA") }} &emsp;&emsp;{{ f.Filename|default("NA") }}</strong></h3>
+        <td style="text-align:center;"> Total </td>
         {% endif %}
-           <table border="1" cellpadding="5" cellspacing="0" style="margin-left:2em;">
-                <caption style="text-align:left;color:blueviolet">Uptime:{{ f.Uptime|default("NA") }}&emsp;Begintime:{{ f.Begintime|default("NA") }}&emsp;Endtime:{{ f.Endtime|default("NA") }}</caption>
-                 <tbody>
-                    <tr>
-                        <td style="text-align:center" >ScenariosPassNum </td>
-                        <td style="text-align:center"> ScenariosFailedNum </td>
-                        <td style="text-align:center"> ScenariosSkippedNum </td>
-                        <td style="text-align:center"> ScenariosTotal </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center;color:green"> {{ f.ScenariosPassNum|default("NA") }} </td>
-                        <td style="text-align:center;color:red"> {{ f.ScenariosFailedNum|default("NA") }}</td>
-                        <td style="text-align:center;color:darkgrey"> {{ f.ScenariosSkippedNum|default("NA") }}</td>
-                        <td style="text-align:center"> {{ f.ScenariosTotal|default("NA") }}</td>
-                    </tr>
-                 </tbody>
-           </table>
-        <br>
-            <p style="text-align:left">
-                <span> <b>&emsp;FailedScenarios:</b>
-                {% for fs in f.FailedScenarios %}
-                    <span> &emsp;&emsp;{{ fs }}</span>
-                {% endfor %}
-                </span>
-            <br>
-                <span><b> &emsp;PassScenarios:</b>
-                {% for ps in f.PassScenarios %}
-                    <span>  &emsp;&emsp;{{ ps }}</span>
-                {% endfor %}
-                </span>
-            <br>
-                <span><b>&emsp;Description:</b><br>
-                    <span>  &emsp;&emsp;{{ f.Description|default("NA") }}     </span>
-                 </span>
-            </p>
-            {% for s in f.scenarios %}
-                <hr class="hrLine" style="width:100%;border:none;border-top:1px solid MediumOrchid"/>
-        {% if s.Status == "Status.failed" %}
-                <h4 style="text-align:left;color:red"><strong>&emsp;Scenario:{{ s.Scenario|default("NA") }}       &emsp;&emsp;{{ s.Status|default("NA") }} </strong></h4>
-                {% else %}
-                <h4 style="text-align:left;color:green"><strong>&emsp;Scenario:{{ s.Scenario|default("NA") }}     &emsp;  &emsp;{{ s.Status|default("NA") }} </strong></h4>
-                {% endif %}
-                    <table border="1" cellpadding="5" cellspacing="0" style="margin-left:2em">
-                        <caption style="text-align:left;color:blueviolet">Statistical:<br> </caption>
-                         <tbody>
-                            <tr>
-                                <td> StepsPassNum </td>
-                                <td> StepsFailedNum </td>
-                                <td> StepsSkippedNum </td>
-                                <td> StepsTotal </td>
-                                <td style="text-align:center"> Uptime </td>
-                                <td style="text-align:center"> Begintime </td>
-                                <td style="text-align:center"> Endtime </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:center;color:green"> {{ s.StepsPassNum|default("NA") }} </td>
-                                <td style="text-align:center;color:red"> {{ s.StepsFailedNum|default("NA") }}</td>
-                                <td style="text-align:center;color:darkgrey"> {{ s.StepsSkippedNum|default("NA") }}</td>
-                                <td style="text-align:center"> {{ s.StepsTotal|default("NA") }}</td>
-                                <td> {{ s.Uptime|default("NA") }}</td>
-                                <td> {{ s.Begintime|default("NA") }}</td>
-                                <td> {{ s.Endtime|default("NA") }}</td>
-                            </tr>
-                         </tbody>
+        <td style="text-align:center;"> {{ pro }}PassNum </td>
+        <td style="text-align:center;"> {{ pro }}FailedNum </td>
+        <td style="text-align:center;"> {{ pro }}SkippedNum </td>
+    </tr>
+    <tr>
+        <td style="text-align:center;color:blue"> {{ rate|default("NA") }}</td>
+        <td style="text-align:center;color:green"> {{ pass|default("NA") }} </td>
+        <td style="text-align:center;color:red"> {{ fail|default("NA") }}</td>
+        <td style="text-align:center;color:#a9a9a9"> {{ skip|default("NA") }}</td>
+    </tr>
+{%- endmacro %}
+
+{% macro show_pass_fail(pro,passes=[],fails=[],pad=1) -%}
+    <span style="padding-left:{{ pad }}em;"> <b>Failed{{ pro }}:</b>
+    {% for fail in fails %}
+        <span style="text-align:left;color:orangered;padding-left:{{ pad+1 }}em;">{{ fail }}</span>
+    {% endfor %}
+    </span>
+<br>
+    <span style="padding-left:{{ pad }}em;"><b>Pass{{ pro }}&ensp;:</b>
+    {% for pass in passes %}
+        <span style="text-align:left;color:greenyellow;padding-left:{{ pad+1 }}em;">{{ pass }}</span>
+    {% endfor %}
+    </span>
+<br>
+{%- endmacro %}  
+
+{% macro show_title(state,pro,name,pad=0,filename="") %}
+    {% if state == "Status.failed" %}
+    <h3 style="text-align:left;color:red;padding-left:{{ pad }}em;" ><strong>{{  pro }}:{{ name|default("NA") }}  &emsp;&emsp; {{ state|default("NA") }}</strong></h3>
+    {% else %}
+    <h3 style="text-align:left;color:green;padding-left:{{ pad }}em;"><strong>{{  pro }}:{{ name|default("NA") }} &emsp;&emsp;{{ state|default("NA") }}</strong></h3>
+    {% endif %}
+{% endmacro %}   
+    
+{% macro show(index,source) -%}
+    {% if source == 1 %}
+        {% set sour='../../template/S12.png' %}
+    {% else  %}
+        {% set sour="../../template/S11.png" %}
+    {% endif %}
+    <div class="menubox">
+        <div class="title" title="点击展开/隐藏"> <input type="image" src="{{ sour }}" onclick="displayid('{{ index }}');"/></div> 
+    <div id="{{ index }}" style="display:none;">
+{%- endmacro %}
+
+<h1><b><strong>Reports - 自动化测试报告 - {{ AutoTest }}</strong> </b></h1><br>
+   <div id="line">
+       {%  set TotalId = 4 + features|length %}
+        <button  onclick="contentshow(1,{{ TotalId }});"><b>Analysis</b></button>
+        <button  onclick="contentshow(2,{{ TotalId }});" title="Logs"><b>Result</b></button>
+        <button  onclick="contentshow(3,{{ TotalId }});" title="Logs"><b>Brief</b></button>
+        <button  onclick="contentshow(4,{{ TotalId }});" title="Logs"><b>Detail</b></button>
+        <br></div>
+    <div id="colu">    
+        {% for name in features  %}
+            <button onclick="contentshow(4+{{ loop.index }},{{ TotalId }});" title="Cases"><b>F{{ loop.index }} - {{ name.Filename }}</b></button>
+       <br> <br>
+        {% endfor %}
+   </div>
+
+   <div id="demon">
+       <div id="1" class="show_area">
+            <table  border="1" cellpadding="5" cellspacing="0">
+                    <caption style="text-align:left;color:blueviolet"> Analysis:<br> </caption>
+                     <tbody>
+                        <tr>
+                            <td style="text-align:center"> CasesTotal </td>
+                            <td style="text-align:center"> AutoCasesTotal </td>
+                            <td style="text-align:center"> CasesExecuteTotal </td>
+                            <td style="text-align:center"> Uptime </td>
+                            <td style="text-align:center"> Begintime </td>
+                            <td style="text-align:center"> Endtime </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center"> {{ CasesTotal|default("NA") }} </td>
+                            <td style="text-align:center"> {{ AutoCasesTotal|default("NA") }}</td>
+                            <td style="text-align:center"> {{ CasesExecuteTotal|default("NA") }}</td>
+                            <td> {{ Uptime|default("NA") }}</td>
+                            <td> {{ Begintime|default("NA") }}</td>
+                            <td> {{ Endtime|default("NA") }}</td>
+                        </tr>
+                </table>
+       <br>
+            <table  border="1" cellpadding="5" cellspacing="0">
+                    <tbody>{{ show_list("Features",PassedRate,FeaturesPassNum,FeaturesFailedNum,FeaturesSkippedNum)  }}</tbody>
+            </table >
+       <br>
+
+       </div>
+       <div id="2" class="show_area" style="display:none;">
+            <pre>{% for resultlog in "result"|openlog  %}
+                 {{ resultlog }}
+            {% endfor %}</pre>
+       </div>
+       <div id="3" class="show_area" style="display:none;">
+           <pre>
+            {% for brieflog in "brief"|openlog  %}
+                 {{ brieflog }}
+            {% endfor %}</pre>
+       </div>
+       <div id="4" class="show_area" style="display:none;">
+           <pre>
+            {% for detaillog in "detail"|openlog  %}
+                 {{ detaillog }}
+            {% endfor %}</pre>
+       </div>
+       {% for f in features  %}
+            {% with temp_id=4+loop.index  %}
+                <div id={{ temp_id }} class="show_area" style="display:none;">
+            {% endwith %}
+                {{ show_title(f.Status,"Feature",f.Feature,0.5)}}
+                   <table border="1" width="660" cellpadding="5" cellspacing="0" style="margin-left:2em;">
+                        <caption style="text-align:left;color:blueviolet">Uptime:{{ f.Uptime|default("NA") }}&emsp;Begintime:{{ f.Begintime|default("NA") }}&emsp;Endtime:{{ f.Endtime|default("NA") }}</caption>
+                         <tbody>{{ show_list("Scenarios",f.ScenariosTotal,f.ScenariosPassNum,f.ScenariosFailedNum,f.ScenariosSkippedNum)  }}</tbody>
                    </table>
-                <br>
-                    <p style="text-align:left">
-                        <span><b>&emsp;&emsp;FailedSteps:</b>
-                            {% for fs in  s.FailedSteps %}
-                                <span>   &emsp;&emsp;  {{ fs }}     </span>
-                            {% endfor %}
-                        </span>
-                <br>
-                        <span><b>&emsp;&emsp;PassSteps:</b>
-                            {% for ps in s.PassSteps %}
-                                <span>&emsp;&emsp;{{ ps }}</span>
-                            {% endfor %}
-                        </span>
-                <br>
-                        <span><b>&emsp;&emsp;Texts:</b></span>
-                    </p>
-                    <pre style="font-style:italic;font-family:微软雅黑">{{ s.Texts }}</pre>
-<hr class="hrLine" style="width:100%;border:none;border-top:1px dotted  Coral"/>
-            {% for p in s.steps %}
-                {% if p.Status == "Status.failed" %}
-                    <h5 style="text-align:left;color:red"><strong>&emsp;&emsp;Step:{{ p.Step }}  &emsp;&emsp;  {{ p.Status }} </strong></h5>
-                {% else %}
-                    <h5 style="text-align:left;color:greenyellow"><strong>&emsp;&emsp;Step:{{ p.Step }}  &emsp;&emsp;  {{ p.Status }} </strong></h5>
-                {% endif %}
+            <br>
                  <p style="text-align:left">
-                     <span><b>&emsp;&emsp;&emsp;Begintime:</b>  {{ p.Begintime|default("NA") }}   &emsp;</span>
-                     <span><b>Endtime:</b>    {{ p.Endtime|default("NA") }}   &emsp;</span>
-                     <span><b>Uptime:</b>     {{ p.Uptime|default("NA") }}   &emsp; </span>
+                    {{ show_pass_fail("Scenarios",f.PassScenarios,f.FailedScenarios,1)  }}
+                     <span><b> &emsp;Description &emsp;:</b><span> &emsp; &emsp;{{ f.Description|default("NA") }}</span></span></p>
+                {% for s in f.scenarios %}
+                    <hr class="hrLine" style="width:100%;border:none;border-top:1px solid MediumOrchid"/>
+                    {{  show_title(s.Status,"Scenario",s.Scenario,1.5)  }}
+                    {{ show( s.Scenario,1) }}
+                    <table border="1" width="660" cellpadding="5" cellspacing="0" style="margin-left:2em">
+                         <caption style="text-align:left;color:blueviolet">Uptime:{{ s.Uptime|default("NA") }}&emsp;Begintime:{{ s.Begintime|default("NA") }}&emsp;Endtime:{{ s.Endtime|default("NA") }}</caption>
+                         <tbody>{{ show_list("Steps",s.StepsTotal,s.StepsPassNum,s.StepsFailedNum,s.StepsSkippedNum)  }}</tbody>
+                   </table>
             <br>
-                     <span><b>&emsp;&emsp;&emsp;Logs: </b><br>
-                     {% for log in  p.Logs %}
-                          <span>&emsp;&emsp; &emsp;&emsp;{{ log }}<br></span>
-                     {% endfor %}
-                     </span>
-            <br>
-                  </p>
-<hr class="hrLine" style="width:100%;border:none;border-top:1px dotted  Coral"/>
-            {% endfor %}
-<hr class="hrLine" style="width:100%;border:none;border-top:1px dotted MediumOrchid"/>
-            {% endfor %}
-<hr class="hrLine" style="width:100%;border:none;border-top:1px dotted skyblue "/>
-{% endfor %}   
+                    <p style="text-align:left">{{ show_pass_fail("Steps",s.PassSteps,s.FailedSteps,2) }}
+                     <span><b>&emsp;&emsp;Texts &emsp;&emsp;&ensp;:</b></span></p>
+                     <pre style="font-style:italic;font-family:微软雅黑">&emsp;&emsp;&ensp;&emsp;&emsp;&ensp;{{ s.Texts }}</pre>
+                        {% for p in s.steps %}
+                          <hr class="hrLine" style="width:100%;border:none;border-top:1px dotted  Coral"/>
+                            {{ show_title(p.Status,"Step",p.Step,2.5)  }}
+                            {{ show(p.ID,2) }}
+                             <p style="text-align:left">
+                                 <span><b>&emsp;&emsp;&emsp;Begintime:</b>  {{ p.Begintime|default("NA") }}   &emsp;</span>
+                                 <span><b>Endtime:</b>    {{ p.Endtime|default("NA") }}   &emsp;</span>
+                                 <span><b>Uptime:</b>     {{ p.Uptime|default("NA") }}   &emsp; </span>
+                        <br>
+                                 <span><b>&emsp;&emsp;&emsp;Logs: </b><br>
+                                 {% for log in  p.Logs %}
+                                      <span>&emsp;&emsp; &emsp;&emsp;{{ log }}<br></span>
+                                 {% endfor %}
+                                 </span>
+                        <br></p>
+                             <hr class="hrLine" style="width:100%;border:none;border-top:1px dotted  Coral"/>
+                            </div></div>  
+                        {% endfor %}
+                    <hr class="hrLine" style="width:100%;border:none;border-top:1px dotted MediumOrchid"/>
+                    </div></div> 
+                {% endfor %}
+                </div>
+       {% endfor %}
+</div></div>
 </body>
 </html>
